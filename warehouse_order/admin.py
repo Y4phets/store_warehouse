@@ -16,8 +16,6 @@ class WarehouseOrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number', 'status',)
 
     def save_model(self, request, obj, form, change):
-        s = ""
-        # если пустые кварги, то обновление. если не пустые, то создание
         # http://0.0.0.0:8001/api/v1/store_order/3/
         s = obj.id
         url = obj.warehouse_account.end_point

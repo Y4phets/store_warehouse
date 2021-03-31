@@ -16,8 +16,6 @@ class StoreOrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number', 'status',)
 
     def save_model(self, request, obj, form, change):
-        s = ""
-        # http://0.0.0.0:8001/api/v1/store_order/3/
         s = obj.id
         url = obj.warehouse_account.end_point
         data = {
@@ -26,6 +24,6 @@ class StoreOrderAdmin(admin.ModelAdmin):
             "status": obj.status,
             "end_point": f"http://0.0.0.0:8000/api/v1/store_order/"
         }
-        response = requests.patch("http://0.0.0.0:8001/api/v1/warehouse_order/10/",
+        response = requests.patch(f"http://0.0.0.0:8001/api/v1/warehouse_order/{s}/",
                                   data=data) if obj.pk else requests.post(url, data=data)
         obj.save()

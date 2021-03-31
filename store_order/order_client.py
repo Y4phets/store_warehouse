@@ -1,13 +1,9 @@
 import logging
-from typing import Iterable, Iterator, List
+from typing import List
 
 import requests
 
-from brandquad.utils.iterators import grouper_it
-
-
 logger = logging.getLogger(__name__)
-
 
 API_TIMEOUT_SECONDS = 60
 
@@ -37,14 +33,11 @@ class StoreOrderClient:
         :param ids: Unique identifier for the products.
         :return:
         """
-        url = f"{self._endpoint}/orgs/products/"
+        url = f"{self._endpoint}"
 
-        if len(ids) > 100:
-            raise ValueError("To request a maximum of 100 products per call, send an array of product IDs in the body of the call.")
-
-        logging.debug('Request salisfy products report for {ids}'.format(ids=','.join(ids)))
+        logging.debug('Request products report for {ids}'.format(ids=','.join(ids)))
         response = requests.request(
-            method="REPORT",
+            method="POST",
             url=url,
             json={"ids": list(ids)}
         )
@@ -52,6 +45,6 @@ class StoreOrderClient:
                       .format(ids=','.join(ids), response_text=response.text))
 
         if response.status_code != 200:
-            raise StoreOrderApiError(f"Salsify API error. Error code {response.status_code}", response)
+            raise StoreOrderApiError(f"API error. Error code {response.status_code}", response)
 
         return response.json()
